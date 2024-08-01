@@ -5,6 +5,9 @@
 <configuration>
     <properties resource="application.properties">
     </properties>
+    <typeAliases>
+<!--        <typeAlias type="com.aniDB.aniDB_batch." alias="member" />-->
+    </typeAliases>
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
@@ -17,6 +20,7 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="org/mybatis/example/BlogMapper.xml"/>
+<!--        <mapper resource="com.aniDB.aniDB_batch.mapper.GenreMapper"/>-->
+<!--        <mapper resource="org/mybatis/example/BlogMapper.xml"/>-->
     </mappers>
 </configuration>
