@@ -91,8 +91,6 @@ CREATE TABLE publisher (
 );
 delete from publisher;
 
-select * from publisher;
-
 CREATE TABLE alternative_publisher_name (
     alternative_publisher_id    INT NOT NULL AUTO_INCREMENT,
     original_publisher_id       INT NOT NULL,
@@ -102,6 +100,8 @@ CREATE TABLE alternative_publisher_name (
     PRIMARY KEY (alternative_publisher_id, original_publisher_id),
     FOREIGN KEY (original_publisher_id) REFERENCES publisher(publisher_id)
 );
+
+
 
 
 CREATE TABLE artist_type (
@@ -337,5 +337,15 @@ CREATE TABLE upvoted_publication(
 
 
 show tables;
+
+delete from publisher;
+delete from alternative_publisher_name;
+ALTER TABLE `publisher` AUTO_INCREMENT = 1;
+ALTER TABLE `alternative_publisher_name` AUTO_INCREMENT = 1;
+select * from publisher;
+select * from alternative_publisher_name;
+select * from publisher p
+	join alternative_publisher_name alt_p
+		on p.publisher_id = original_publisher_id;
 
 

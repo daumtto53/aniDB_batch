@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aniDB.aniDB_batch.mapper.PublisherMapper">
+
+    <insert id="bulkInsertPublisher"
+            parameterType="java.util.List"
+            useGeneratedKeys="true" keyColumn="publisher_id" keyProperty="publisherId">
+        INSERT INTO publisher (publisher_name, website_url)
+            VALUES
+                <foreach collection="list" item="publisher" separator=",">
+                    (#{publisher.publisherName}, #{publisher.websiteUrl})
+                </foreach>
+    </insert>
+
+    <insert id="bulkInsertAlternativePublisherName"
+            parameterType="java.util.List"
+            useGeneratedKeys="true" keyColumn="alternative_publisher_id" keyProperty="alternativePublisherId"
+    >
+        INSERT INTO alternative_publisher_name (original_publisher_id, alternative_name)
+            VALUES
+                <foreach collection="list" item="alternative_publisher_name" separator=",">
+                    (
+                        #{alternative_publisher_name.originalPublisherId},
+                        #{alternative_publisher_name.alternativeName}
+                    )
+                </foreach>
+    </insert>
+</mapper>
+

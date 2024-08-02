@@ -14,6 +14,6 @@ public class Publisher {
     private  Long publisherId;
     private  String publisherName;
     private  String websiteUrl;
-    private  String parentPublisher;
-    private List<AlternativePublisherName> alternativePublisherNameList;
+//    private  String parentPublisher;
+    private  List<String> alternativePublisherNameList;
 }
