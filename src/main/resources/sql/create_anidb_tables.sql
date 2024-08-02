@@ -263,7 +263,7 @@ CREATE TABLE anidb_comment (
     created_at  DATETIME(3),
     updated_at  DATETIME(3),
   FOREIGN KEY (member_id) REFERENCES anidb_member(member_id),
-  FOREIGN KEY (article_id) REFERENCES article(article_id)
+  FOREIGN KEY (article_id) REFERENCES anidb_article(article_id)
 );
 
 CREATE TABLE recommend_anime (
