@@ -1,12 +1,285 @@
 use anidb;
 
 show tables;
+-- Add CREATED_AT, UPDATED_AT
+create table series_type {
+    type_id     INT PRIMARY KEY AUTO_INCREMENT,
+    type_name   VARCHAR(16) NOT NULL,
+}
 
+-- confirmed.
 create table genre(
-	genre_id	INT 	auto_increment,
+	genre_id	INT PRIMARY KEY	auto_increment,
     genre_name	VARCHAR(256) UNIQUE,
     genre_description	VARCHAR(256), 
-    PRIMARY KEY(genre_id)
 );
 
-select * from genre;
+
+-- make series_type before publication
+CREATE TABLE publication (
+    publication_id INT PRIMARY KEY  AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    description VARCHAR(2048),
+    series_type INT NOT NULL UNIQUE,
+    volumes_in_origin_country INT,
+    status_in_origin_country VARCHAR(50),
+    published_date DATETIME,
+    licensed BOOLEAN DEFAULT FALSE,
+    ranked INT,
+    scores FLOAT DEFAULT 0.0,
+    cover_image_url VARCHAR(2048),
+    FOREIGN KEY (series_type) REFERENCES series_type(type_id),
+);
+
+
+-- create publication before ""
+CREATE TABLE alternative_title (
+    alternative_title_id INT AUTO_INCREMENT,
+    publication_id INT NOT NULL,
+    alternative_title VARCHAR(255) NOT NULL,
+    title_language varchar(255),
+    PRIMARY KEY (alternative_title_id, publication_id),
+    FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
+
+);
+
+
+-- create publication before ""
+CREATE TABLE related_series(
+    related_publication_id INT AUTO_INCREMENT,
+    publication_id INT NOT NULL,
+    relation VARCHAR(32),
+    PRIMARY KEY (related_publication_id, publication_id),
+    FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
+);
+
+
+
+-- confirmed.
+-- create publication before published_status
+CREATE TABLE published_status (
+    publication_id INT,
+    volume_number INT PRIMARY KEY,
+    publication_date DATETIME,
+    published_country VARCHAR(256),
+    cover_image_url VARCHAR(256),
+    PRIMARY KEY (publication_id, volume_number),
+    FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
+);
+
+
+
+
+-- publisher
+CREATE TABLE publisher (
+    publisher_id INT PRIMARY KEY AUTO_INCREMENT,
+    publisher_name VARCHAR(256) UNIQUE,
+    website_url VARCHAR(2048),
+    parent_publisher_id INT,
+    FOREIGN KEY (parent_publisher_id) REFERENCES publisher(publisher_id)
+);
+
+
+CREATE TABLE artist_type (
+  artist_type_id INT PRIMARY KEY AUTO_INCREMENT,
+  artist_type_name VARCHAR(256) UNIQUE,
+);
+
+-- create aritst_type before artist
+CREATE TABLE artist (
+  artist_id INT PRIMARY KEY AUTO_INCREMENT,
+  artist_type INT NOT NULL,
+  native_name VARCHAR(256),
+  artist_description VARCHAR(2048),
+  birth_place VARCHAR(256),
+  birth_date DATE,
+  artist_status VARCHAR(256),
+  gender VARCHAR(5),
+  official_website_url VARCHAR(2048),
+  twitter_url VARCHAR(2048),
+  cover_image_url VARCHAR(2048),
+  FOREIGN KEY (artist_type) REFERENCES artist_type(artist_type_id)
+);
+
+-- create artist before ""
+CREATE TABLE artist_associated_name (
+  associated_name_id INT PRIMARY KEY AUTO_INCREMENT,
+  artist_id INT NOT NULL,
+  associated_name VARCHAR(256),
+  FOREIGN KEY (artist_id) REFERENCES artist(artist_id)
+);
+
+-- CONFIRMED
+CREATE TABLE publication_publisher (
+  publication_id INT NOT NULL, 
+  publisher_id INT NOT NULL,
+  PRIMARY KEY (publication_id, publisher_id),
+  FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
+  FOREIGN KEY (publisher_id) REFERENCES publisher(publisher_id)
+);
+
+-- CONFIRMED
+CREATE TABLE publication_artist (
+  publication_id INT NOT NULL,
+  artist_id INT NOT NULL,
+  PRIMARY KEY (publication_id, artist_id),
+  FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
+  FOREIGN KEY (artist_id) REFERENCES artist(artist_id),
+);
+
+-- CONFIRMED
+CREATE TABLE publication_genre (
+  publication_id INT NOT NULL,
+  genre_id INT NOT NULL,
+  PRIMARY KEY (title_id, genre_id),
+  FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
+  FOREIGN KEY (genre_id) REFERENCES genre(genre_id),
+);
+
+create TABLE anime (
+    anime_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(256),
+)
+
+-- CONFIRMED
+-- ########## Anime Table을 만들어야 생성 가능.
+CREATE TABLE anime_adaptation (
+  publication_id INT,
+  anime_id INT,
+  publication_start INT UNIQUE,
+  publication_end INT UNIQUE,
+  anime_start INT UNIQUE,
+  anime_end INT UNIQUE,
+  PRIMARY KEY (publication_id, anime_id),
+  FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
+  FOREIGN KEY (anime_id) REFERENCES anime(anime_id)
+);
+
+-- CONFIRMED
+CREATE TABLE publication_adaptation (
+  src_publication_id INT ,
+  dst_publication_id INT ,
+  src_publication_start INT ,
+  src_publication_end INT ,
+  dst_publication_start INT ,
+  dst_publication_end INT ,
+  PRIMARY KEY (src_publication_id, dst_publication_id),
+  FOREIGN KEY (src_publication_id) REFERENCES publication(publication_id),
+  FOREIGN KEY (dst_publication_id) REFERENCES publication(publication_id),
+);
+
+
+
+-- MEMBER / ARTICLE RELATED
+
+
+-- CREATE TABLE likeable_content (
+--   likeable_content_id INT PRIMARY KEY AUTO_INCREMENT,
+--   likeable_content_name VARCHAR(128) NOT NULL,
+--   UNIQUE KEY (likeable_content_name)  -- Additional uniqueness constraint
+-- );
+
+CREATE TABLE anidb_role (
+  anidb_role_id INT PRIMARY KEY AUTO_INCREMENT,
+  role_name VARCHAR(32) NOT NULL
+);
+
+CREATE TABLE member (
+  member_id INT PRIMARY KEY AUTO_INCREMENT,
+
+  loginid VARCHAR(256) UNIQUE,
+  username VARCHAR(256) UNIQUE NOT NULL,
+  member_password VARCHAR(120) NOT NULL,
+  email VARCHAR(32),
+  isFromSocial BOOLEAN DEFAULT TRUE,
+  isDisabled BOOLEAN DEFAULT FALSE,
+  member_name VARCHAR(128),
+  nickname VARCHAR(120),
+  birthday DATE,
+--   M or F
+  gender VARCHAR(1),
+  member_description VARCHAR(256),
+);
+
+
+CREATE TABLE member_anidb_role (
+  member_id INT ,
+  anidb_role_id INT ,
+  PRIMARY KEY (member_id, role_id),
+  FOREIGN KEY member_id REFERENCES member(member_id),
+  FOREIGN KEY role_id REFERENCES anidb_role(anidb_role_id),
+);
+
+
+CREATE TABLE article (
+  article_id INT PRIMARY KEY AUTO_INCREMENT,
+  member_id INT NOT NULL,  -- Foreign key to member table
+  publication_id INT,
+  anime_id INT, 
+  title VARCHAR(256),
+  content VARCHAR(65565),  -- Assuming content can be long
+  views INT     NOT NULL DEFAULT 0,
+  upvotes INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (article_id, member_id)
+  FOREIGN KEY (member_id) REFERENCES member(member_id),
+  FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
+  FOREIGN KEY (anime_id) REFERENCES anime(anime_id),
+);
+
+CREATE TABLE comment (
+  comment_id INT PRIMARY KEY AUTO_INCREMENT,
+  member_id INT NOT NULL,  -- Foreign key to member table
+  article_id INT NOT NULL,  -- Foreign key to article table
+  content VARCHAR(2048),  -- Assuming content can be long
+  upvotes INT DEFAULT 0,
+  FOREIGN KEY (member_id) REFERENCES member(member_id),
+  FOREIGN KEY (article_id) REFERENCES article(article_id)
+);
+
+CREATE TABLE recommend_anime (
+  member_id INT,
+  anime_id INT,
+  discussion VARCHAR(1045),
+  PRIMARY KEY (member_id, anime_id),
+  FOREIGN KEY member_id REFERENCES member(member_id),
+  FOREIGN KEY anime_id REFERENCES anime(anime_id),
+);
+
+CREATE TABLE recommend_publication (
+  member_id INT,
+  publication_id INT,
+  discussion VARCHAR(1045),
+  PRIMARY KEY (member_id, publication_id),
+  FOREIGN KEY member_id REFERENCES member(member_id),
+  FOREIGN KEY publication_id REFERENCES publication(publication_id),
+);
+
+
+
+-- Upvoted
+CREATE TABLE upvoted_article (
+  member_id INT NOT NULL,
+  article_id INT NOT NULL,
+  upvoted_number INT,
+  PRIMARY KEY (member_id, article_id),
+  FOREIGN KEY (member_id) REFERENCES member(member_id),
+  FOREIGN KEY (article_id) REFERENCES article(article_id),
+);
+
+CREATE TABLE upvoted_comment(
+  member_id INT NOT NULL,
+  comment_id INT NOT NULL,
+  upvoted_number INT,
+  PRIMARY KEY (member_id, comment_id),
+  FOREIGN KEY (member_id) REFERENCES member(member_id),
+  FOREIGN KEY (comment_id) REFERENCES article(comment),
+);
+
+CREATE TABLE upvoted_publication(
+  member_id INT NOT NULL,
+  publication_id INT NOT NULL,
+  upvoted_number INT,
+  PRIMARY KEY (member_id, publication_id),
+  FOREIGN KEY (member_id) REFERENCES member(member_id),
+  FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
+);
