@@ -1,10 +1,10 @@
-use anidb_test;
+use anidb;
 
 create table series_type (
     type_id     INT AUTO_INCREMENT PRIMARY KEY ,
     type_name   VARCHAR(16) NOT NULL,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3)
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at  DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3)
 );
 
 -- confirmed.
@@ -12,8 +12,8 @@ create table genre(
 	genre_id	INT PRIMARY KEY	auto_increment,
     genre_name	VARCHAR(256) UNIQUE,
     genre_description	VARCHAR(256),
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3)
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at  DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3)
 );
 
 
@@ -30,8 +30,8 @@ CREATE TABLE publication (
     ranked INT,
     scores FLOAT DEFAULT 0.0,
     cover_image_url VARCHAR(2048),
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
     FOREIGN KEY (series_type) REFERENCES series_type(type_id)
 );
 
@@ -42,8 +42,8 @@ CREATE TABLE alternative_title (
     publication_id INT NOT NULL,
     alternative_title VARCHAR(255) NOT NULL,
     title_language varchar(255),
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
     PRIMARY KEY (alternative_title_id, publication_id),
     FOREIGN KEY (publication_id) REFERENCES publication(publication_id)
 );
@@ -54,8 +54,8 @@ CREATE TABLE related_series(
     related_publication_id INT AUTO_INCREMENT,
     publication_id INT NOT NULL,
     relation VARCHAR(32),
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
     PRIMARY KEY (related_publication_id, publication_id),
     FOREIGN KEY (publication_id) REFERENCES publication(publication_id)
 );
@@ -70,8 +70,8 @@ CREATE TABLE published_status (
     publication_date DATETIME,
     published_country VARCHAR(256),
     cover_image_url VARCHAR(256),
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
     PRIMARY KEY (publication_id, volume_number),
     FOREIGN KEY (publication_id) REFERENCES publication(publication_id)
 );
@@ -85,17 +85,30 @@ CREATE TABLE publisher (
     publisher_name VARCHAR(256) UNIQUE,
     website_url VARCHAR(2048),
     parent_publisher_id INT,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
     FOREIGN KEY (parent_publisher_id) REFERENCES publisher(publisher_id)
+);
+delete from publisher;
+
+select * from publisher;
+
+CREATE TABLE alternative_publisher_name (
+    alternative_publisher_id    INT NOT NULL AUTO_INCREMENT,
+    original_publisher_id       INT NOT NULL,
+    alternative_name            VARCHAR(256) NOT NULL,
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
+    PRIMARY KEY (alternative_publisher_id, original_publisher_id),
+    FOREIGN KEY (original_publisher_id) REFERENCES publisher(publisher_id)
 );
 
 
 CREATE TABLE artist_type (
   artist_type_id INT PRIMARY KEY AUTO_INCREMENT,
   artist_type_name VARCHAR(256) UNIQUE,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3)
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3)
 );
 
 -- create aritst_type before artist
@@ -111,8 +124,8 @@ CREATE TABLE artist (
   official_website_url VARCHAR(2048),
   twitter_url VARCHAR(2048),
   cover_image_url VARCHAR(2048),
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   FOREIGN KEY (artist_type) REFERENCES artist_type(artist_type_id)
 );
 
@@ -121,8 +134,8 @@ CREATE TABLE artist_associated_name (
   associated_name_id INT PRIMARY KEY AUTO_INCREMENT,
   artist_id INT NOT NULL,
   associated_name VARCHAR(256),
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   FOREIGN KEY (artist_id) REFERENCES artist(artist_id)
 );
 
@@ -130,8 +143,8 @@ CREATE TABLE artist_associated_name (
 CREATE TABLE publication_publisher (
   publication_id INT NOT NULL, 
   publisher_id INT NOT NULL,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (publication_id, publisher_id),
   FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
   FOREIGN KEY (publisher_id) REFERENCES publisher(publisher_id)
@@ -141,8 +154,8 @@ CREATE TABLE publication_publisher (
 CREATE TABLE publication_artist (
   publication_id INT NOT NULL,
   artist_id INT NOT NULL,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (publication_id, artist_id),
   FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
   FOREIGN KEY (artist_id) REFERENCES artist(artist_id)
@@ -152,8 +165,8 @@ CREATE TABLE publication_artist (
 CREATE TABLE publication_genre (
   publication_id INT NOT NULL,
   genre_id INT NOT NULL,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (publication_id, genre_id),
   FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
   FOREIGN KEY (genre_id) REFERENCES genre(genre_id)
@@ -162,8 +175,8 @@ CREATE TABLE publication_genre (
 create TABLE anime (
     anime_id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(256),
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3)
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3)
 );
 
 -- CONFIRMED
@@ -174,8 +187,8 @@ CREATE TABLE anime_adaptation (
   publication_end INT UNIQUE,
   anime_start INT UNIQUE,
   anime_end INT UNIQUE,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (publication_id, anime_id),
   FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
   FOREIGN KEY (anime_id) REFERENCES anime(anime_id)
@@ -189,8 +202,8 @@ CREATE TABLE publication_adaptation (
   src_publication_end INT ,
   dst_publication_start INT ,
   dst_publication_end INT ,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (src_publication_id, dst_publication_id),
   FOREIGN KEY (src_publication_id) REFERENCES publication(publication_id),
   FOREIGN KEY (dst_publication_id) REFERENCES publication(publication_id)
@@ -202,8 +215,8 @@ CREATE TABLE publication_adaptation (
 CREATE TABLE anidb_role (
   role_id INT PRIMARY KEY AUTO_INCREMENT,
   role_name VARCHAR(32) NOT NULL,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3)
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3)
 );
 
 CREATE TABLE anidb_member (
@@ -221,16 +234,16 @@ CREATE TABLE anidb_member (
 --   M or F
   gender VARCHAR(1),
   member_description VARCHAR(256),
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3)
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3)
 );
 
 
 CREATE TABLE member_anidb_role (
   member_id INT ,
   role_id INT ,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (member_id, role_id),
   FOREIGN KEY (member_id) REFERENCES anidb_member(member_id),
   FOREIGN KEY (role_id) REFERENCES anidb_role(role_id)
@@ -246,8 +259,8 @@ CREATE TABLE anidb_article (
   content TEXT,  -- Assuming content can be long
   views INT     NOT NULL DEFAULT 0,
   upvotes INT NOT NULL DEFAULT 0,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (article_id, member_id),
   FOREIGN KEY (member_id) REFERENCES anidb_member(member_id),
   FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
@@ -260,8 +273,8 @@ CREATE TABLE anidb_comment (
   article_id INT NOT NULL,  -- Foreign key to article table
   content VARCHAR(2048),  -- Assuming content can be long
   upvotes INT DEFAULT 0,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   FOREIGN KEY (member_id) REFERENCES anidb_member(member_id),
   FOREIGN KEY (article_id) REFERENCES anidb_article(article_id)
 );
@@ -270,8 +283,8 @@ CREATE TABLE recommend_anime (
   member_id INT,
   anime_id INT,
   discussion VARCHAR(1045),
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (member_id, anime_id),
   FOREIGN KEY (member_id) REFERENCES anidb_member(member_id),
   FOREIGN KEY (anime_id) REFERENCES anime(anime_id)
@@ -281,8 +294,8 @@ CREATE TABLE recommend_publication (
   member_id INT,
   publication_id INT,
   discussion VARCHAR(1045),
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (member_id, publication_id),
   FOREIGN KEY (member_id) REFERENCES anidb_member(member_id),
   FOREIGN KEY (publication_id) REFERENCES publication(publication_id)
@@ -293,8 +306,8 @@ CREATE TABLE upvoted_article (
   member_id INT NOT NULL,
   article_id INT NOT NULL,
   upvoted_number INT,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (member_id, article_id),
   FOREIGN KEY (member_id) REFERENCES anidb_member(member_id),
   FOREIGN KEY (article_id) REFERENCES anidb_article(article_id)
@@ -304,8 +317,8 @@ CREATE TABLE upvoted_comment(
   member_id INT NOT NULL,
   comment_id INT NOT NULL,
   upvoted_number INT,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (member_id, comment_id),
   FOREIGN KEY (member_id) REFERENCES anidb_member(member_id),
   FOREIGN KEY (comment_id) REFERENCES anidb_comment(comment_id)
@@ -315,8 +328,8 @@ CREATE TABLE upvoted_publication(
   member_id INT NOT NULL,
   publication_id INT NOT NULL,
   upvoted_number INT,
-    created_at  DATETIME(3),
-    updated_at  DATETIME(3),
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (member_id, publication_id),
   FOREIGN KEY (member_id) REFERENCES anidb_member(member_id),
   FOREIGN KEY (publication_id) REFERENCES publication(publication_id)
@@ -324,3 +337,5 @@ CREATE TABLE upvoted_publication(
 
 
 show tables;
+
+
