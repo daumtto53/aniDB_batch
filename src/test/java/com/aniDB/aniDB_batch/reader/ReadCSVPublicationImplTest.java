@@ -19,12 +19,20 @@ class ReadCSVPublicationImplTest {
     @Value("${profile.dev.csv-location}")
     String csvPath;
     @Autowired
-    ReadCSV<Publication> publicationReadCSV;
+    ReadCSVPublicationImpl publicationReadCSV;
 
     @Test
     void readCSV() {
         List<Publication> publicationList = new ArrayList<>();
         publicationReadCSV.readCSV(publicationList, csvPath + "novel_info.csv");
+        System.out.println("");
+    }
 
+    @Test
+    void publisherRelation() {
+        List<Publication> publicationList = new ArrayList<>();
+        publicationReadCSV.readCSV(publicationList, csvPath + "novel_info.csv");
+        publicationReadCSV.getPublisherRelation();
+        System.out.println("");
     }
 }

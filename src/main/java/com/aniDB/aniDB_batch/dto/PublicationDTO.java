@@ -1,8 +1,12 @@
-package com.aniDB.aniDB_batch.entity;
+package com.aniDB.aniDB_batch.dto;
+
+import com.aniDB.aniDB_batch.entity.AlternativeTitle;
+import com.aniDB.aniDB_batch.entity.AnimeAdaptation;
+import com.aniDB.aniDB_batch.entity.Genre;
+import com.aniDB.aniDB_batch.entity.RelatedSeries;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -11,12 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @ToString
-public class Publication {
+public class PublicationDTO {
 
     private Long publicationId;
     private String title;
     private String description;
-    private int typeId;
+    private int seriesType;
     @Builder.Default
     private int statusInOriginCountry = 0;
     @Builder.Default
@@ -38,5 +42,4 @@ public class Publication {
     private List<RelatedSeries> relatedSeriesList;
     private List<Genre> genres;
     private List<AnimeAdaptation> animeAdaptationList;
-    private List<String> publisherList;
 }
