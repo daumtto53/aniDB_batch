@@ -18,7 +18,7 @@ public class Publication {
     private String description;
     private int seriesType;
     @Builder.Default
-    private int statusInOriginCountry = 1;
+    private int statusInOriginCountry = 0;
     @Builder.Default
     private String status = "Ongoing"; // Default value "Ongoing"
     private LocalDate published_date;

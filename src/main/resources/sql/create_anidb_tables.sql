@@ -348,4 +348,3 @@ select * from publisher p
 	join alternative_publisher_name alt_p
 		on p.publisher_id = original_publisher_id;
 
-

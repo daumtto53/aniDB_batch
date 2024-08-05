@@ -10,5 +10,13 @@
                     (#{genre.genreName})
                 </foreach>
     </insert>
+
+    <select id="selectAllGenres"
+            resultType="map">
+        select genre_name, genre_id
+        from genre
+    </select>
+
+
 </mapper>
 

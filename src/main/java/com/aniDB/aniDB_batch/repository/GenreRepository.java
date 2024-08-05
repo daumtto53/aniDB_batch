@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Repository
@@ -18,6 +19,11 @@ public class GenreRepository {
     public List<Genre> addGenres(List<Genre> genreList) {
         genreMapper.batchinsertGenres(genreList);
         return genreList;
+    }
+
+    @Transactional
+    public List<Map<String, Object>> selectAllGenres() {
+        return genreMapper.selectAllGenres();
     }
 
 }

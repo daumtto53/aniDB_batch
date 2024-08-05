@@ -16,10 +16,8 @@ public class ReadCSVSeriesTypeImpl implements ReadCSV<SeriesType> {
     public List<SeriesType> readCSV(List<SeriesType> retrieveList, String csvPath) {
         try (CSVReader reader = new CSVReader(new FileReader(csvPath))){
             String line[];
-            Gson gson = new Gson();
 
             while ((line = reader.readNext()) != null) {
-//                log.info("line[0] = {}", line[0]);
                 retrieveList.add(SeriesType.builder()
                         .typeName(line[0].strip())
                         .build()

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aniDB.aniDB_batch.mapper.SeriesTypeMapper">
+
+    <insert id="insertAllSeriesType"
+            parameterType="java.util.List"
+            useGeneratedKeys="true" keyColumn="type_id" keyProperty="typeId">
+        INSERT INTO series_type (type_id, type_name)
+            VALUES
+                <foreach collection="list" item="seriesType" separator=",">
+                    (#{seriesType.typeId}, #{seriesType.typeName})
+                </foreach>
+    </insert>
+
+    <select id="selectAllSeriesType"
+            resultType="map">
+        SELECT type_name, type_id
+        FROM series_type
+    </select>
+
+</mapper>
+
