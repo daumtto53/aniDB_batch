@@ -49,11 +49,10 @@ public class ReadCSVPublicationImpl implements ReadCSV<Publication> {
     public List<Publication> readCSV(List<Publication> retrieveList, String csvPath) {
         try (CSVReader reader = new CSVReader(new FileReader(csvPath))){
             String line[];
-
             while ((line = reader.readNext()) != null) {
                 String title = line[0].strip();
 
-                log.info("title={}", title);
+//                log.info("title={}", title);
 
                 String description = line[1].strip();
                 String type = line[2].strip().equals("Novel") ? "Light Novel" : line[2].strip();

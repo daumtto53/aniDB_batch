@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class AnimeAdaptation {
+    private  Long animeAdaptationId;
     private  Long publicationId;
     private  Long animeId;
     private  String publicationStart;

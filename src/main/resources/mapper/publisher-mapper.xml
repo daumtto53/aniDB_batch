@@ -25,5 +25,29 @@
                     )
                 </foreach>
     </insert>
+
+
+    <resultMap id="publisherMap" type="java.util.HashMap">
+        <result property="name" column="publisher_name" javaType="java.lang.String"/>
+        <result property="id" column="publisher_id" javaType="java.lang.Integer"/>
+    </resultMap>
+    <select id="selectPublisherMapOfNameAndId"
+            resultType="map"
+            resultMap="publisherMap">
+        SELECT publisher_name, publisher_id
+        FROM publisher
+    </select>
+
+    <update id="updatePublisherForLabelPublisherRelation"
+            parameterType="java.util.List">
+        <foreach collection="list" item="relationDTO" separator=";">
+            UPDATE publisher
+            SET parent_publisher_id = #{relationDTO.parentPublisherId}
+            where publisher_name = #{relationDTO.labelName}
+        </foreach>
+    </update>
+
+
+
 </mapper>
 

@@ -22,7 +22,7 @@ CREATE TABLE publication (
     publication_id INT PRIMARY KEY  AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
     description VARCHAR(2048),
-    series_type INT NOT NULL UNIQUE,
+    series_type INT NOT NULL,
     volumes_in_origin_country INT,
     status_in_origin_country VARCHAR(50),
     published_date DATETIME,
@@ -34,6 +34,7 @@ CREATE TABLE publication (
     updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
     FOREIGN KEY (series_type) REFERENCES series_type(type_id)
 );
+
 
 
 -- create publication before ""
@@ -181,6 +182,7 @@ create TABLE anime (
 
 -- CONFIRMED
 CREATE TABLE anime_adaptation (
+  anime_adaptation_id INT auto_increment,
   publication_id INT,
   anime_id INT,
   publication_start INT UNIQUE,
@@ -189,7 +191,7 @@ CREATE TABLE anime_adaptation (
   anime_end INT UNIQUE,
     created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
     updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
-  PRIMARY KEY (publication_id, anime_id),
+  PRIMARY KEY (anime_adaptation_id),
   FOREIGN KEY (publication_id) REFERENCES publication(publication_id),
   FOREIGN KEY (anime_id) REFERENCES anime(anime_id)
 );
@@ -347,4 +349,10 @@ select * from alternative_publisher_name;
 select * from publisher p
 	join alternative_publisher_name alt_p
 		on p.publisher_id = original_publisher_id;
-
+desc publication;
+desc publisher;
+desc alternative_title;
+desc anime_adaptation;
+desc publication_publisher;
+desc publication_genre;
+desc related_series;

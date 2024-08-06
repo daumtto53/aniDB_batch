@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aniDB.aniDB_batch.mapper.AnimeAdaptationMapper">
+    <insert id="batchInsertAnimeAdaptation"
+            parameterType="java.util.List"
+            useGeneratedKeys="true" keyColumn="anime_adaptation_id" keyProperty="animeAdaptationId">
+        INSERT INTO anime_adaptation
+        (publication_id, publication_start, publication_end, anime_start, anime_end)
+        VALUES
+        <foreach collection="list" item="aa" separator=",">
+            (#{aa.publicationId}, #{aa.publicationStart}, #{aa.publicationEnd},
+            #{aa.animeStart}, #{aa.animeEnd})
+        </foreach>
+    </insert>
+</mapper>
+

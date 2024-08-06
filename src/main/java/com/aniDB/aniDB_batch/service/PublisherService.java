@@ -1,6 +1,7 @@
 package com.aniDB.aniDB_batch.service;
 
 
+import com.aniDB.aniDB_batch.dto.PublisherRelationDTO;
 import com.aniDB.aniDB_batch.entity.AlternativePublisherName;
 import com.aniDB.aniDB_batch.entity.Publisher;
 import com.aniDB.aniDB_batch.reader.ReadCSV;
@@ -41,5 +42,9 @@ public class PublisherService {
         });
         // alternative_publisher_name에 original_publisher_id, alternative_name을 저장.
         publisherRepository.bulkInsertAlternativePublisherName(alternativePublisherNameList);
+    }
+
+    public void updatePublisherForLabelPublisherRelation(List<PublisherRelationDTO> publisherRelationDTOList) {
+        publisherRepository.updatePublisherForLabelPublisherRelation(publisherRelationDTOList);
     }
 }

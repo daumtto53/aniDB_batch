@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aniDB.aniDB_batch.mapper.RelatedSeriesMapper">
+    <insert id="batchInsertRelatedSeries"
+            parameterType="java.util.List"
+            useGeneratedKeys="true" keyColumn="related_publication_id">
+        INSERT INTO related_series
+            (publication_id, relation)
+        VALUES
+        <foreach collection="list" item="rp" separator=",">
+            (#{rp.relatedPublicationId}, #{pp.relation})
+        </foreach>
+    </insert>
+</mapper>
