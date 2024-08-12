@@ -31,16 +31,6 @@ class PublicationServiceTest {
 
     @Test
     void bulkInsertPublication() {
-        /*
-            public void bulkInsertPublication(List<Publication> publicationList,
-                                      List<AlternativeTitle> alternativeTitleList,
-                                      List<RelatedSeries> relatedSeriesList,
-                                      List<PublicationPublisher> publicationPublisherList,
-                                      List<PublicationGenre> publicationGenreList,
-                                      List<AnimeAdaptation> animeAdaptationList,
-                                      String path) {
-         */
-
         List<Publication> publicationList = new ArrayList<>();
         List<AlternativeTitle> alternativeTitleList = new ArrayList<>();
         List<RelatedSeries> relatedSeriesList = new ArrayList<>();

@@ -213,4 +213,8 @@ ALTER TABLE publication MODIFY description TEXT CHARACTER SET utf8mb4 COLLATE ut
 ALTER TABLE publication CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ALTER DATABASE anidb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+show full columns from publication;
+desc publication;
+
+desc publisher;
 

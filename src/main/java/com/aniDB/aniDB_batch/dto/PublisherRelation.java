@@ -16,4 +16,5 @@ public class PublisherRelation {
     public PublisherRelation() {
         this.labelPublisherMap = new HashMap<>();
     }
+
 }

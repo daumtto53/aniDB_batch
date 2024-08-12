@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PublicationGenre {
-    private Long titleId;
+    private Long publicationId;
     private Long genreId;
 }

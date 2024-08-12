@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,10 +38,18 @@ public class PublicationService {
         ReadCSVPublicationImpl readCSVPublication = (ReadCSVPublicationImpl) readCSV;
         //publicationList 저장되어있음.
         readCSVPublication.readCSV(publicationList, path);
+
+        //publication 저장하기 전에 publisher 리스트 다시 한번 넣어주기. (Label 때문에.)
+        List<Publisher> publisherList = new ArrayList<>();
+        preparePublisherListForBulkInserting(publicationList, publisherList);
+        publisherRepository.bulkInsertPublisherWithLabel(publisherList);
+
         // publication 저장.
         publicationRepository.bulkInsertPublication(publicationList);
         //publicationList에 id가 저장되어있다.
         Map<String, String> labelPublisherMap = ((ReadCSVPublicationImpl) readCSV).getPublisherRelation().getLabelPublisherMap();
+        //Add labels;
+//        insertLabels(publicationList);
         updatePublisherRelations(labelPublisherMap);
 
 
@@ -62,14 +71,23 @@ public class PublicationService {
         setPublicationGenreList(publicationList, publicationGenreList);
         setAnimeAdaptationList(publicationList, animeAdaptationList);
         System.out.println("check");
-//        alternativeTitleRepository.bulkInsertAlternativeTitle(alternativeTitleList);
-//        animeAdaptationRepository.bulkInsertAnimeAdaptation(animeAdaptationList);
-//        publicationGenreRepository.bulkInsertPublicationGenre(publicationGenreList);
-//        publicationPublisherRepository.bulkInsertPublicationPublisher(publicationPublisherList);
-//        relatedSeriesRepository.bulkInsertRelatedSeries(relatedSeriesList);
-        updatePublisherRelations(labelPublisherMap);
+        relatedSeriesRepository.bulkInsertRelatedSeries(relatedSeriesList);
+        publicationPublisherRepository.bulkInsertPublicationPublisher(publicationPublisherList);
+        publicationGenreRepository.bulkInsertPublicationGenre(publicationGenreList);
+        animeAdaptationRepository.bulkInsertAnimeAdaptation(animeAdaptationList);
+        alternativeTitleRepository.bulkInsertAlternativeTitle(alternativeTitleList);
     }
 
+    private void preparePublisherListForBulkInserting(List<Publication> publicationList, List<Publisher> publisherList) {
+        publicationList.stream().forEach(publication -> {
+            List<String> publisherStringList  = publication.getPublisherList();
+            for (String publisherString: publisherStringList){
+                publisherList.add(
+                        Publisher.builder().publisherName(publisherString).build()
+                );
+            }
+        });
+    }
 
 
     private void setAlternativeTitleList(List<Publication> publicationList,
@@ -135,7 +153,7 @@ public class PublicationService {
                     for (Genre genre : publication.getGenres()) {
                         publicationGenreList.add(
                                 PublicationGenre.builder()
-                                        .titleId(publication.getPublicationId())
+                                        .publicationId(publication.getPublicationId())
                                         .genreId(genre.getGenreId())
                                         .build()
                         );
@@ -180,7 +198,12 @@ public class PublicationService {
                             .build();
                 }).collect(Collectors.toList());
         //bulkUpdate를 한다.
-        publisherRepository.updatePublisherForLabelPublisherRelation(publisherRelationDTOList);
+
+        for (PublisherRelationDTO publisherRelationDTO: publisherRelationDTOList) {
+            publisherRepository.updatePublisherForLabelPublisherRelationTest(publisherRelationDTO);
+        }
+//        publisherRepository.updatePublisherForLabelPublisherRelation(publisherRelationDTOList);
+        System.out.println("nothing");
     }
 
 

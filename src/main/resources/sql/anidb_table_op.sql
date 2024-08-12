@@ -25,6 +25,9 @@ desc publication;
 
 delete from publication;
 ALTER TABLE `publication` AUTO_INCREMENT = 1;
+update publisher
+set parent_publisher_id = null;
 
-select * from publication;
-
+select *
+from publisher p1 inner join publisher p2 on p1.publisher_id = p2.parent_publisher_id
+where p2.parent_publisher_id is not null;

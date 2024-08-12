@@ -5,7 +5,7 @@
     <insert id="bulkInsertPublisher"
             parameterType="java.util.List"
             useGeneratedKeys="true" keyColumn="publisher_id" keyProperty="publisherId">
-        INSERT INTO publisher (publisher_name, website_url)
+        INSERT IGNORE INTO publisher (publisher_name, website_url)
             VALUES
                 <foreach collection="list" item="publisher" separator=",">
                     (#{publisher.publisherName}, #{publisher.websiteUrl})
@@ -26,6 +26,17 @@
                 </foreach>
     </insert>
 
+    <insert id="bulkInsertPublisherWithLabel"
+            parameterType="java.util.List"
+            useGeneratedKeys="true" keyColumn="publisher_id" keyProperty="publisherId"
+    >
+        INSERT IGNORE INTO publisher (publisher_name)
+        VALUES
+            <foreach collection="list" item="publisher" separator=",">
+                (#{publisher.publisherName})
+            </foreach>
+    </insert>
+
 
     <resultMap id="publisherMap" type="java.util.HashMap">
         <result property="name" column="publisher_name" javaType="java.lang.String"/>
@@ -40,11 +51,24 @@
 
     <update id="updatePublisherForLabelPublisherRelation"
             parameterType="java.util.List">
-        <foreach collection="list" item="relationDTO" separator=";">
+        <foreach collection="list" item="publisherRelationDTOList">
             UPDATE publisher
-            SET parent_publisher_id = #{relationDTO.parentPublisherId}
-            where publisher_name = #{relationDTO.labelName}
+            SET parent_publisher_id =
+                <if test="publisherRelationDTOList.parentPublisherId != null">
+                    #{publisherRelationDTOList.parentPublisherId, jdbcType=INTEGER}
+                </if>
+                <if test="publisherRelationDTOList.parentPublisherId == null">
+                    NULL
+                </if>
+            WHERE publisher_name = '#{publisherRelationDTOList.labelName, jdbcType=VARCHAR}'
         </foreach>
+    </update>
+
+    <update id="updatePublisherForLabelPublisherRelationTest"
+            parameterType="com.aniDB.aniDB_batch.dto.PublisherRelationDTO">
+        UPDATE publisher
+            SET parent_publisher_id = #{parentPublisherId}
+        WHERE publisher_name = #{labelName}
     </update>
 
 

@@ -79,7 +79,7 @@ public class ReadCSVPublicationImpl implements ReadCSV<Publication> {
                 List<RelatedSeries> relatedSeries = publicationPreprocessor.convertMapToRelatedSeries(relatedSeriesList);
                 List<AlternativeTitle> alternativeTitles = publicationPreprocessor.convertMapToAlternativeTitle(alternativeTitleList);
                 List<String> publishers = publicationPreprocessor.convertMapToPublisher(publisherList, labelList);
-                publisherRelation.setLabelPublisherMap(publicationPreprocessor.createPublisherRelations(publisherList, labelList));
+                publisherRelation.setLabelPublisherMap(publicationPreprocessor.createPublisherRelations(publisherRelation.getLabelPublisherMap(), publisherList, labelList));
 
                 retrieveList.add(
                         //author, artist는 아직 data가 없어서 안넣을거임.

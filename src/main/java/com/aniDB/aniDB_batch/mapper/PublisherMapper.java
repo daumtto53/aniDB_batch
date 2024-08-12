@@ -14,7 +14,11 @@ public interface PublisherMapper {
     void bulkInsertPublisher(List<Publisher> publisherList);
     void bulkInsertAlternativePublisherName(List<AlternativePublisherName> alternativePublisherNameList);
 
+    void bulkInsertPublisherWithLabel(List<Publisher> publisherList);
+
     List<Map<String, Object>> selectPublisherMapOfNameAndId();
 
     void updatePublisherForLabelPublisherRelation(List<PublisherRelationDTO> publisherRelationDTOList);
+
+    void updatePublisherForLabelPublisherRelationTest(PublisherRelationDTO publisherRelationDTO);
 }

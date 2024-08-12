@@ -35,6 +35,11 @@ public class PublisherRepository {
     }
 
     @Transactional
+    public void bulkInsertPublisherWithLabel(List<Publisher> publisherList) {
+        publisherMapper.bulkInsertPublisherWithLabel(publisherList);
+    }
+
+    @Transactional
     public Map<String, Integer> selectPublisherMapOfNameAndId() {
         List<Map<String, Object>> publisherNameIdListMap = publisherMapper.selectPublisherMapOfNameAndId();
         HashMap<String, Integer> collect = publisherNameIdListMap.stream()
@@ -53,5 +58,11 @@ public class PublisherRepository {
     public void updatePublisherForLabelPublisherRelation(List<PublisherRelationDTO> publisherRelationDTOList) {
         publisherMapper.updatePublisherForLabelPublisherRelation(publisherRelationDTOList);
     }
+
+    @Transactional
+    public void updatePublisherForLabelPublisherRelationTest(PublisherRelationDTO publisherRelationDTO) {
+        publisherMapper.updatePublisherForLabelPublisherRelationTest(publisherRelationDTO);
+    }
+
 
 }

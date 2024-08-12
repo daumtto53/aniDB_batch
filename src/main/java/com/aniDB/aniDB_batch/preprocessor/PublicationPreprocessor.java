@@ -124,11 +124,16 @@ public class PublicationPreprocessor {
         List<GsonAnimeAdaptationBinder> adaptMapList = gson.fromJson(jsonString, listType);
         List<AnimeAdaptation> collect = adaptMapList.stream()
                 .map(element -> {
+                    Integer volStart = element.getVolume_start().equals("") ? null : Integer.valueOf(element.getVolume_start());
+                    Integer volEnd = element.getVolume_end().equals("") ? null : Integer.valueOf(element.getVolume_end());
+                    Integer animeStart = Integer.valueOf(element.getAnime_start());
+                    Integer animeEnd = Integer.valueOf(element.getAnime_end());
+
                     return AnimeAdaptation.builder()
-                            .publicationStart(element.getVolume_start())
-                            .publicationEnd(element.getVolume_end())
-                            .animeStart(element.getAnime_start())
-                            .animeEnd(element.getAnime_end())
+                            .publicationStart(volStart)
+                            .publicationEnd(volEnd)
+                            .animeStart(animeStart)
+                            .animeEnd(animeEnd)
                             .build();
                 }).collect(Collectors.toList());
         return collect;
@@ -170,21 +175,28 @@ public class PublicationPreprocessor {
         Set<String> publishers = new HashSet<>();
         publisherList.stream()
                 .forEach(map -> {
-                    publishers.add(map.get("publisher"));
-                    publishers.add(map.get("label"));
+                    if (!map.get("publisher").equals("")){
+                        publishers.add(map.get("publisher"));
+                    }
+                    if (!map.get("label").equals("")){
+                        publishers.add(map.get("label"));
+                    }
                 });
         labelList.stream()
                 .forEach(map -> {
-                    publishers.add(map.get("publisher"));
-                    publishers.add(map.get("label"));
+                    if (!map.get("publisher").equals("")){
+                        publishers.add(map.get("publisher"));
+                    }
+                    if (!map.get("label").equals("")){
+                        publishers.add(map.get("label"));
+                    }
                 });
         List<String> nonDuplicate = new ArrayList<>();
         nonDuplicate.addAll(publishers);
         return nonDuplicate;
     }
 
-    public Map<String, String> createPublisherRelations(List<Map<String, String>> publisherList, List<Map<String, String>> labelList) {
-        Map<String, String> labelPublisherMap = new HashMap<>();
+    public Map<String, String> createPublisherRelations(Map<String, String> labelPublisherMap, List<Map<String, String>> publisherList, List<Map<String, String>> labelList) {
         publisherList.stream()
                 .forEach(map -> {
                     labelPublisherMap.put(map.get("label"), map.get("publisher"));

@@ -1,4 +1,6 @@
 use anidb;
+ALTER DATABASE anidb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 
 create table series_type (
     type_id     INT AUTO_INCREMENT PRIMARY KEY ,
@@ -21,7 +23,7 @@ create table genre(
 CREATE TABLE publication (
     publication_id INT PRIMARY KEY  AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
-    description VARCHAR(2048),
+    description VARCHAR(8192),
     series_type INT NOT NULL,
     volumes_in_origin_country INT,
     status_in_origin_country VARCHAR(50),
@@ -54,7 +56,7 @@ CREATE TABLE alternative_title (
 CREATE TABLE related_series(
     related_publication_id INT AUTO_INCREMENT,
     publication_id INT NOT NULL,
-    relation VARCHAR(32),
+    relation VARCHAR(256),
     created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
     updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
     PRIMARY KEY (related_publication_id, publication_id),
@@ -185,10 +187,10 @@ CREATE TABLE anime_adaptation (
   anime_adaptation_id INT auto_increment,
   publication_id INT,
   anime_id INT,
-  publication_start INT UNIQUE,
-  publication_end INT UNIQUE,
-  anime_start INT UNIQUE,
-  anime_end INT UNIQUE,
+  publication_start INT,
+  publication_end INT,
+  anime_start INT,
+  anime_end INT,
     created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
     updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (anime_adaptation_id),
