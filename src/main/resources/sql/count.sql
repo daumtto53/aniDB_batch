@@ -14,6 +14,7 @@ SELECT COUNT(*) FROM genre;
 
 SELECT * FROM publication;
 SELECT COUNT(*) FROM publication;
+desc publication;
 
 SELECT * FROM publication_genre;
 SELECT COUNT(*) FROM publication_genre;
@@ -29,3 +30,21 @@ SELECT COUNT(*) FROM related_series;
 
 SELECT * FROM series_type;
 SELECT COUNT(*) FROM series_type;
+
+DESC alternative_publisher_name;
+DESC alternative_title;
+DESC anime_adaptation;
+DESC genre;
+DESC publication;
+DESC publication_genre;
+DESC publication_publisher;
+DESC publisher;
+DESC related_series;
+DESC series_type;
+
+-- BELOW IS TEST
+select * from publication
+order by ranked desc; 
+
+show tables;
+desc upvoted_publication;

@@ -309,7 +309,6 @@ CREATE TABLE recommend_publication (
 CREATE TABLE upvoted_article (
   member_id INT NOT NULL,
   article_id INT NOT NULL,
-  upvoted_number INT,
     created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
     updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (member_id, article_id),
@@ -320,7 +319,6 @@ CREATE TABLE upvoted_article (
 CREATE TABLE upvoted_comment(
   member_id INT NOT NULL,
   comment_id INT NOT NULL,
-  upvoted_number INT,
     created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
     updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (member_id, comment_id),
@@ -331,12 +329,24 @@ CREATE TABLE upvoted_comment(
 CREATE TABLE upvoted_publication(
   member_id INT NOT NULL,
   publication_id INT NOT NULL,
-  upvoted_number INT,
     created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
     updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
   PRIMARY KEY (member_id, publication_id),
   FOREIGN KEY (member_id) REFERENCES anidb_member(member_id),
   FOREIGN KEY (publication_id) REFERENCES publication(publication_id)
+);
+
+CREATE TABLE article_file (
+	article_id INT,
+    member_id INT, 
+    original_filename VARCHAR(255) NOT NULL UNIQUE,
+    saved_filename VARCHAR(255) NOT NULL,
+    size float DEFAULT 0.0,
+    created_at DATETIME(3) DEFAULT now(),
+    updated_at DATETIME(3) default now() on update now(),
+    primary key (article_id, member_id),
+    foreign key (article_id) references anidb_article(article_id),
+    foreign key (member_id) references anidb_member(member_id)
 );
 
 
