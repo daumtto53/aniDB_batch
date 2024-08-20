@@ -85,7 +85,7 @@ CREATE TABLE published_status (
 -- publisher
 CREATE TABLE publisher (
     publisher_id INT PRIMARY KEY AUTO_INCREMENT,
-    publisher_name VARCHAR(256) UNIQUE,
+    publisher_name VARCHAR(256) UNIQUE NOT NULL,
     website_url VARCHAR(2048),
     parent_publisher_id INT,
     created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
@@ -103,8 +103,6 @@ CREATE TABLE alternative_publisher_name (
     PRIMARY KEY (alternative_publisher_id, original_publisher_id),
     FOREIGN KEY (original_publisher_id) REFERENCES publisher(publisher_id)
 );
-
-
 
 
 CREATE TABLE artist_type (
@@ -187,6 +185,8 @@ CREATE TABLE anime_adaptation (
   anime_adaptation_id INT auto_increment,
   publication_id INT,
   anime_id INT,
+  anime_name VARCHAR(255),
+  anime_type INT NULL,
   publication_start INT,
   publication_end INT,
   anime_start INT,
@@ -218,7 +218,7 @@ CREATE TABLE publication_adaptation (
 -- MEMBER / ARTICLE RELATED
 CREATE TABLE anidb_role (
   role_id INT PRIMARY KEY AUTO_INCREMENT,
-  role_name VARCHAR(32) NOT NULL,
+  role_name VARCHAR(32) NOT NULL UNIQUE,
     created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
     updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3)
 );
@@ -240,6 +240,17 @@ CREATE TABLE anidb_member (
   member_description VARCHAR(256),
     created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
     updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3)
+);
+
+CREATE TABLE series_comment (
+	publication_id INT,
+    member_id	INT,
+    anidb_comment	VARCHAR(2048),
+    created_at	DATETIME(3) NOT NULL DEFAULT now(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT now(3) on update now(3),
+    PRIMARY KEY (publication_id, member_id),
+    FOREIGN KEY (publication_id) references publication(publication_id),
+    FOREIGN KEY (member_id) references anidb_member(member_id)
 );
 
 
