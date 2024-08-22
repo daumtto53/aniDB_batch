@@ -56,6 +56,7 @@ CREATE TABLE alternative_title (
 CREATE TABLE related_series(
     related_publication_id INT AUTO_INCREMENT,
     publication_id INT NOT NULL,
+    title VARCHAR(1048) NOT NULL,
     relation VARCHAR(256),
     created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
     updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
@@ -92,7 +93,6 @@ CREATE TABLE publisher (
     updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
     FOREIGN KEY (parent_publisher_id) REFERENCES publisher(publisher_id)
 );
-delete from publisher;
 
 CREATE TABLE alternative_publisher_name (
     alternative_publisher_id    INT NOT NULL AUTO_INCREMENT,
@@ -359,7 +359,6 @@ CREATE TABLE article_file (
     foreign key (article_id) references anidb_article(article_id),
     foreign key (member_id) references anidb_member(member_id)
 );
-
 
 show tables;
 

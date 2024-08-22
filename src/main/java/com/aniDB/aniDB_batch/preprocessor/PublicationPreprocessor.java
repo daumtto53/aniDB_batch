@@ -156,6 +156,7 @@ public class PublicationPreprocessor {
     public List<RelatedSeries> convertMapToRelatedSeries(List<Map<String, String>> relatedSeriesList) {
         List<RelatedSeries> relations = relatedSeriesList.stream().map(map -> {
             return RelatedSeries.builder()
+                    .title(map.get("title"))
                     .relation(map.get("relation")).build();
         }).collect(Collectors.toList());
         return relations;

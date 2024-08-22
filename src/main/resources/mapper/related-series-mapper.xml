@@ -5,10 +5,10 @@
             parameterType="java.util.List"
             useGeneratedKeys="true" keyColumn="related_publication_id">
         INSERT INTO related_series
-            (publication_id, relation)
+            (publication_id, relation, title)
         VALUES
         <foreach collection="list" item="rp" separator=",">
-            (#{rp.publicationId}, #{rp.relation})
+            (#{rp.publicationId}, #{rp.relation}, #{rp.title})
         </foreach>
     </insert>
 </mapper>

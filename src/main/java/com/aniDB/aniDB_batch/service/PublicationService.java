@@ -114,6 +114,7 @@ public class PublicationService {
                     for (RelatedSeries relatedSeries : publication.getRelatedSeriesList()) {
                         RelatedSeries createdEntity = RelatedSeries.builder()
                                 .publicationId(publication.getPublicationId())
+                                .title(relatedSeries.getTitle())
                                 .relation(relatedSeries.getRelation())
                                 .build();
                         relatedSeriesList.add(createdEntity);

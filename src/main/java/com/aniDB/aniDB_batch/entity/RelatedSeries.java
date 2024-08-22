@@ -11,6 +11,7 @@ import lombok.*;
 @ToString
 public class RelatedSeries {
     private  Long relatedPublicationId;
+    private String title;
     private  Long publicationId;
     private  String relation;
 }
