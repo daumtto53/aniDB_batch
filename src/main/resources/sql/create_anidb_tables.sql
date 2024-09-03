@@ -243,12 +243,12 @@ CREATE TABLE anidb_member (
 );
 
 CREATE TABLE series_comment (
+    series_comment_id INT AUTO_INCREMENT PRIMARY KEY,
 	publication_id INT,
-    member_id	INT,
+    member_id	INT NOT NULL,
     anidb_comment	VARCHAR(2048),
     created_at	DATETIME(3) NOT NULL DEFAULT now(3),
     updated_at DATETIME(3) NOT NULL DEFAULT now(3) on update now(3),
-    PRIMARY KEY (publication_id, member_id),
     FOREIGN KEY (publication_id) references publication(publication_id),
     FOREIGN KEY (member_id) references anidb_member(member_id)
 );
@@ -328,6 +328,16 @@ CREATE TABLE upvoted_article (
 );
 
 CREATE TABLE upvoted_comment(
+  member_id INT NOT NULL,
+  comment_id INT NOT NULL,
+    created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
+    updated_at DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3),
+  PRIMARY KEY (member_id, comment_id),
+  FOREIGN KEY (member_id) REFERENCES anidb_member(member_id),
+  FOREIGN KEY (comment_id) REFERENCES anidb_comment(comment_id)
+);
+
+CREATE TABLE upvoted_series_comment(
   member_id INT NOT NULL,
   comment_id INT NOT NULL,
     created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
