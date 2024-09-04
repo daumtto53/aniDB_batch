@@ -29,6 +29,11 @@ public class PublicationProcessor {
         }
     }
 
+    public void insertNovel() {
+        String fileName = "novel_info";
+        bulkInsertPublication(fileName);
+    }
+
     void bulkInsertPublication(String fileName) {
         List<Publication> publicationList = new ArrayList<>();
         List<AlternativeTitle> alternativeTitleList = new ArrayList<>();

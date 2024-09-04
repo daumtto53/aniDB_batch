@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class SeriesTypeService {
     private final SeriesTypeRepository seriesTypeRepository;
 
+    @Transactional
     public void saveSeriesTypeFromCSV(List<SeriesType> seriesTypeList) {
         seriesTypeRepository.saveAllSeriesType(seriesTypeList);
     }

@@ -5,11 +5,14 @@
     <insert id="bulkInsertPublisher"
             parameterType="java.util.List"
             useGeneratedKeys="true" keyColumn="publisher_id" keyProperty="publisherId">
-        INSERT IGNORE INTO publisher (publisher_name, website_url)
+        INSERT INTO publisher (publisher_name, website_url)
             VALUES
                 <foreach collection="list" item="publisher" separator=",">
                     (#{publisher.publisherName}, #{publisher.websiteUrl})
                 </foreach>
+        ON DUPLICATE KEY UPDATE
+        publisher_name = VALUES(publisher_name),
+        website_url = VALUES(website_url);
     </insert>
 
     <insert id="bulkInsertAlternativePublisherName"

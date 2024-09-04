@@ -5,7 +5,7 @@
     <insert id="insertAllSeriesType"
             parameterType="java.util.List"
             useGeneratedKeys="true" keyColumn="type_id" keyProperty="typeId">
-        INSERT INTO series_type (type_id, type_name)
+        INSERT IGNORE INTO series_type (type_id, type_name)
             VALUES
                 <foreach collection="list" item="seriesType" separator=",">
                     (#{seriesType.typeId}, #{seriesType.typeName})

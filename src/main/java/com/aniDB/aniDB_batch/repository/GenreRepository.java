@@ -15,7 +15,6 @@ public class GenreRepository {
 
     private final GenreMapper genreMapper;
 
-    @Transactional
     public List<Genre> addGenres(List<Genre> genreList) {
         genreMapper.batchinsertGenres(genreList);
         return genreList;

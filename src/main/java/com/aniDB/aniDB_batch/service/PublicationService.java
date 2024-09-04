@@ -8,6 +8,7 @@ import com.aniDB.aniDB_batch.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class PublicationService {
     private final PublicationGenreRepository publicationGenreRepository;
     private final RelatedSeriesRepository relatedSeriesRepository;
 
+    @Transactional
     public void bulkInsertPublication(List<Publication> publicationList,
                                       List<AlternativeTitle> alternativeTitleList,
                                       List<RelatedSeries> relatedSeriesList,

@@ -4,7 +4,7 @@ ALTER DATABASE anidb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 create table series_type (
     type_id     INT AUTO_INCREMENT PRIMARY KEY ,
-    type_name   VARCHAR(16) NOT NULL,
+    type_name   VARCHAR(16) NOT NULL UNIQUE,
     created_at  DATETIME(3) NOT NULL DEFAULT NOW(3),
     updated_at  DATETIME(3) NOT NULL DEFAULT NOW(3) ON UPDATE NOW(3)
 );

@@ -4,7 +4,7 @@
     <insert id="batchinsertGenres"
             parameterType="java.util.List"
             useGeneratedKeys="true" keyColumn="genre_id" keyProperty="genreId">
-        INSERT INTO genre (genre_name)
+        INSERT IGNORE INTO genre (genre_name)
             VALUES
                 <foreach collection="list" item="genre" separator=",">
                     (#{genre.genreName})

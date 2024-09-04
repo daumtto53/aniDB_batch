@@ -16,12 +16,10 @@ import java.util.Map;
 public class SeriesTypeRepository {
     private final SeriesTypeMapper seriesTypeMapper;
 
-    @Transactional
     public void saveAllSeriesType(List<SeriesType> seriesTypeList) {
         seriesTypeMapper.insertAllSeriesType(seriesTypeList);
     }
 
-    @Transactional
     public List<Map<String, Object>> selectAllSeriesType() {
         return seriesTypeMapper.selectAllSeriesType();
     }
