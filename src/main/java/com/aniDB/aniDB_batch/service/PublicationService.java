@@ -127,13 +127,13 @@ public class PublicationService {
         Map<String, Integer> publisherMapOfNameAndId = publisherRepository.selectPublisherMapOfNameAndId();
 
         for (Map.Entry<String, Integer> entry: publisherMapOfNameAndId.entrySet()) {
-            log.info("key = {}, value = {}", entry.getKey(), entry.getValue());
+//            log.info("key = {}, value = {}", entry.getKey(), entry.getValue());
         }
 
         publicationList.stream()
                 .forEach(publication-> {
                     for (String publisherName: publication.getPublisherList()) {
-                        log.info("publisherName = {}, publication.getId= {}", publisherName, publisherMapOfNameAndId.get(publisherName));
+//                        log.info("publisherName = {}, publication.getId= {}", publisherName, publisherMapOfNameAndId.get(publisherName));
                         if (publisherMapOfNameAndId.get(publisherName) == null)
                             continue;
                         PublicationPublisher createdEntity = PublicationPublisher.builder()

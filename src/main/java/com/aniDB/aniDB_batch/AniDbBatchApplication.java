@@ -1,13 +1,22 @@
 package com.aniDB.aniDB_batch;
 
+import com.aniDB.aniDB_batch.processor.PublicationProcessor;
+import com.aniDB.aniDB_batch.service.PublicationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class AniDbBatchApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AniDbBatchApplication.class, args);
+		ApplicationContext context = SpringApplication.run(AniDbBatchApplication.class, args);
+
+		PublicationProcessor publicationProcessor = context.getBean(PublicationProcessor.class);
+		publicationProcessor.iterateOverFile();
+
+
 	}
 
 }

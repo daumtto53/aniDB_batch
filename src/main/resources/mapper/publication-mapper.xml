@@ -4,7 +4,7 @@
     <insert id="bulkInsertPublication"
             parameterType="java.util.List"
             useGeneratedKeys="true" keyColumn="publication_id" keyProperty="publicationId">
-        INSERT INTO publication
+        INSERT IGNORE INTO publication
             (title, description, series_type, volumes_in_origin_country, status_in_origin_country, published_date,
                 cover_image_url)
             VALUES

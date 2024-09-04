@@ -10,6 +10,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
@@ -40,7 +41,13 @@ public class PublicationPreprocessor {
     Gson gson = new Gson();
 
     public int mapTypeToInt(String type) {
-        return seriesTypeMap.get(type.strip());
+        try {
+            Integer typeNum = seriesTypeMap.get(type.strip());
+            return typeNum;
+        } catch (NullPointerException e) {
+            log.error("no type: type={}" , type);
+            return 1;
+        }
     }
 
     public LocalDateTime yearStringToLocalDateTime(String year) {
@@ -53,8 +60,12 @@ public class PublicationPreprocessor {
     public List<Map<String, String>> getRealatedSeriesList(String relatedSeriesJsonString) {
         Type listType = new TypeToken<List<Map<String, String>>>() {
         }.getType();
-        List<Map<String, String>> relatedSeriesMapList = (List<Map<String, String>>) gson.fromJson(relatedSeriesJsonString, listType);
-        return relatedSeriesMapList;
+        try {
+            List<Map<String, String>> relatedSeriesMapList = (List<Map<String, String>>) gson.fromJson(relatedSeriesJsonString, listType);
+            return relatedSeriesMapList;
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
 
     public List<Map<String, String>> getAlternativeTitleList(String alternativeTitleJsonString) {
@@ -65,7 +76,7 @@ public class PublicationPreprocessor {
             List<Map<String, String>> alternativeTitleMapList = (List<Map<String, String>>) gson.fromJson(alternativeTitleJsonString, listType);
             return alternativeTitleMapList;
         } catch (JsonSyntaxException e) {
-            log.info("alternativeTitle STring = {}, e = {}", alternativeTitleJsonString, e);
+//            log.info("alternativeTitle STring = {}, e = {}", alternativeTitleJsonString, e);
             return new ArrayList<>();
         }
     }
@@ -92,8 +103,12 @@ public class PublicationPreprocessor {
     public List<String> getAuthorList(String jsonString) {
         Type listType = new TypeToken<List<String>>() {
         }.getType();
-        List<String> authorList = gson.fromJson(jsonString, listType);
-        return authorList;
+        try {
+            List<String> authorList = gson.fromJson(jsonString, listType);
+            return authorList;
+        } catch (JsonSyntaxException | IllegalStateException e) {
+            return new ArrayList<>();
+        }
     }
 
     public List<String> getArtistList(String jsonString) {

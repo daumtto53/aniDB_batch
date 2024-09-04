@@ -7,6 +7,7 @@ import com.aniDB.aniDB_batch.entity.*;
 import com.aniDB.aniDB_batch.preprocessor.PublicationPreprocessor;
 import com.google.gson.Gson;
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvMalformedLineException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
@@ -47,67 +48,83 @@ public class ReadCSVPublicationImpl implements ReadCSV<Publication> {
 
     @Override
     public List<Publication> readCSV(List<Publication> retrieveList, String csvPath) {
-        try (CSVReader reader = new CSVReader(new FileReader(csvPath))){
+        try (CSVReader reader = new CSVReader(new FileReader(csvPath))) {
             String line[];
-            while ((line = reader.readNext()) != null) {
-                String title = line[0].strip();
+            int linenumber = 0;
+            while (true) {
+                linenumber++;
+
+                try {
+                    line = reader.readNext();
+                    if (line == null) {
+                        break;
+                    }
+                    String title = line[0].strip();
 
 //                log.info("title={}", title);
 
-                String description = line[1].strip();
-                String type = line[2].strip().equals("Novel") ? "Light Novel" : line[2].strip();
-                int typeId = publicationPreprocessor.mapTypeToInt(type);
-                LocalDate year;
-                try {
-                    year = publicationPreprocessor.yearStringToLocalDateTime(line[3]).toLocalDate();
-                } catch (NullPointerException e) {
-                    year = null;
+                    String description = line[1].strip();
+                    String type = line[2].strip().equals("Novel") ? "Light Novel" : line[2].strip();
+                    int typeId = publicationPreprocessor.mapTypeToInt(type);
+                    LocalDate year;
+                    try {
+                        year = publicationPreprocessor.yearStringToLocalDateTime(line[3]).toLocalDate();
+                    } catch (Exception e) {
+//                    log.error("yearException={}, {}", title, line[3]);
+                        year = null;
+                    }
+                    List<Map<String, String>> relatedSeriesList = publicationPreprocessor.getRealatedSeriesList(line[4]);
+                    List<Map<String, String>> alternativeTitleList = publicationPreprocessor.getAlternativeTitleList(line[5]);
+                    VolumeStatus volumeStatus = publicationPreprocessor.getVolumeStatus(line[6]);
+                    String url = publicationPreprocessor.getImageURL(line[7]);
+                    List<String> authorList = publicationPreprocessor.getAuthorList(line[9]);
+                    List<String> artistList = publicationPreprocessor.getArtistList(line[8]);
+                    List<Map<String, String>> publisherList = publicationPreprocessor.getPublisherList(line[10]);
+                    List<Map<String, String>> labelList = publicationPreprocessor.getPublisherList(line[11]);
+                    List<String> genreList = publicationPreprocessor.getGenreList(line[12]);
+                    List<Genre> genres = publicationPreprocessor.getGenreIdList(genreList);
+                    List<AnimeAdaptation> animeAdaptationList = publicationPreprocessor.getAnimeAdaptationList(line[13]);
+
+
+                    List<RelatedSeries> relatedSeries = publicationPreprocessor.convertMapToRelatedSeries(relatedSeriesList);
+                    List<AlternativeTitle> alternativeTitles = publicationPreprocessor.convertMapToAlternativeTitle(alternativeTitleList);
+                    List<String> publishers = publicationPreprocessor.convertMapToPublisher(publisherList, labelList);
+                    publisherRelation.setLabelPublisherMap(publicationPreprocessor.createPublisherRelations(publisherRelation.getLabelPublisherMap(), publisherList, labelList));
+
+                    retrieveList.add(
+                            //author, artist는 아직 data가 없어서 안넣을거임.
+                            Publication.builder()
+                                    .title(title)
+                                    .description(description)
+                                    .typeId(typeId)
+                                    .published_date(year)
+                                    .statusInOriginCountry(volumeStatus.getVolume())
+                                    .status(volumeStatus.getStatus())
+                                    .coverImageUrl(url)
+                                    .relatedSeriesList(relatedSeries)
+                                    .alternativeTitleList(alternativeTitles)
+                                    .publisherList(publishers)
+                                    .genres(genres)
+                                    .animeAdaptationList(animeAdaptationList)
+                                    .build()
+                    );
+                } catch (Exception e) {
+                    log.error("Malformed CSV at line {}", linenumber);
+                    log.error("Error details: {}", e.getMessage());
+                    log.error("Context: {}", e.getStackTrace());
                 }
-                List<Map<String, String>> relatedSeriesList = publicationPreprocessor.getRealatedSeriesList(line[4]);
-                List<Map<String, String>> alternativeTitleList = publicationPreprocessor.getAlternativeTitleList(line[5]);
-                VolumeStatus volumeStatus = publicationPreprocessor.getVolumeStatus(line[6]);
-                String url = publicationPreprocessor.getImageURL(line[7]);
-                List<String> authorList = publicationPreprocessor.getAuthorList(line[9]);
-                List<String> artistList = publicationPreprocessor.getArtistList(line[8]);
-                List<Map<String ,String >> publisherList = publicationPreprocessor.getPublisherList(line[10]);
-                List<Map<String ,String >> labelList = publicationPreprocessor.getPublisherList(line[11]);
-                List<String> genreList = publicationPreprocessor.getGenreList(line[12]);
-                List<Genre> genres = publicationPreprocessor.getGenreIdList(genreList);
-                List<AnimeAdaptation> animeAdaptationList = publicationPreprocessor.getAnimeAdaptationList(line[13]);
 
-
-                List<RelatedSeries> relatedSeries = publicationPreprocessor.convertMapToRelatedSeries(relatedSeriesList);
-                List<AlternativeTitle> alternativeTitles = publicationPreprocessor.convertMapToAlternativeTitle(alternativeTitleList);
-                List<String> publishers = publicationPreprocessor.convertMapToPublisher(publisherList, labelList);
-                publisherRelation.setLabelPublisherMap(publicationPreprocessor.createPublisherRelations(publisherRelation.getLabelPublisherMap(), publisherList, labelList));
-
-                retrieveList.add(
-                        //author, artist는 아직 data가 없어서 안넣을거임.
-                        Publication.builder()
-                                .title(title)
-                                .description(description)
-                                .typeId(typeId)
-                                .published_date(year)
-                                .statusInOriginCountry(volumeStatus.getVolume())
-                                .status(volumeStatus.getStatus())
-                                .coverImageUrl(url)
-                                .relatedSeriesList(relatedSeries)
-                                .alternativeTitleList(alternativeTitles)
-                                .publisherList(publishers)
-                                .genres(genres)
-                                .animeAdaptationList(animeAdaptationList)
-                                .build()
-                );
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
+            log.error("csvFileName={}", csvPath);
         }
         return retrieveList;
     }
 
     /**
      * call after readCSV
+     *
      * @return
      */
     public PublisherRelation getPublisherRelation() {
