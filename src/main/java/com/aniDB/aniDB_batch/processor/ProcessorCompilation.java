@@ -23,10 +23,10 @@ public class ProcessorCompilation {
     public void executeAllProcessors() {
 
 
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-
-        TransactionStatus status = transactionManager.getTransaction(def);
+//        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+//        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+//
+//        TransactionStatus status = transactionManager.getTransaction(def);
 
         try {
             seriesTypeProcessor.insertAllSeriesType();

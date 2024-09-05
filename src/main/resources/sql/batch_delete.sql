@@ -22,11 +22,9 @@ DELETE FROM publication;
 delete from series_type;
 delete from genre;
 
-select * from series_type;
 delete from series_type;
 ALTER TABLE `series_type` AUTO_INCREMENT = 1;
 
-select * from alternative_publisher_name;
 delete from alternative_publisher_name;
 delete from publication_publisher;
 update publisher set parent_publisher_id = null;
@@ -45,3 +43,14 @@ ALTER TABLE `publisher` AUTO_INCREMENT = 1;
 
 
 desc alternative_publisher_name;
+
+SELECT
+            (COUNT(distinct p.publication_id))
+        FROM publication p
+        LEFT JOIN series_type as st ON st.type_id = p.series_type
+        LEFT JOIN publication_genre pg on pg.publication_id=p.publication_id
+        LEFT JOIN genre g on g.genre_id = pg.genre_id
+        LEFT JOIN publication_publisher pp on pp.publication_id = p.publication_id
+        LEFT JOIN publisher pu on pp.publisher_id = pu.publisher_id
+         WHERE 1 = 1
+                AND st.type_name LIKE CONCAT ('%', 'Manga', '%') ;
